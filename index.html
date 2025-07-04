@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Swiss Real Estate Outlook (2025-2035)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral Harmony -->
+    <!-- Application Structure Plan: A user-centric, non-linear dashboard structure was chosen over a direct report-to-page conversion. The goal is to surface key insights immediately and allow for progressive disclosure. The structure flows from a high-level summary dashboard ('The Big Picture') to interactive explorations of causal factors ('Market Drivers'), a detailed comparative tool for specific locations ('Hyper-Local Deep Dive'), and finally, forward-looking strategic guidance ('Outlook & Recommendations'). This task-oriented design allows different user types (e.g., quick overview seeker vs. detailed analyst) to find value efficiently. Navigation is facilitated by a sticky header, enabling seamless jumps between thematic sections. -->
+    <!-- Visualization & Content Choices: 
+        - SNB Policy Rate: Report Info -> SNB rate history/forecast. Goal -> Show change over time. Viz -> Line Chart (Chart.js). Interaction -> Static view of data. Justification -> A line chart is the clearest way to show a time-series trend.
+        - Hyper-Local Prices: Report Info -> Price/sqm for Zurich, Kilchberg, Thalwil. Goal -> Compare locations and property types. Viz -> Grouped Bar Chart (Chart.js). Interaction -> Dropdown selector to change location data dynamically. Justification -> Bar chart is ideal for direct comparison of quantitative values. The selector makes the comparison interactive and focused, preventing information overload.
+        - Key Metrics: Report Info -> Vacancy rates, price trends. Goal -> Inform with high-impact numbers. Viz -> Styled HTML 'cards'. Interaction -> Data updates based on location selector. Justification -> Cards provide immediate, scannable insights.
+        - Demographic Tug-of-War: Report Info -> Immigration vs. "Silver Tsunami". Goal -> Organize concepts. Viz -> HTML/CSS Flexbox Diagram. Interaction -> None. Justification -> A simple visual diagram is more effective than text alone for explaining this conceptual conflict.
+        - Scenarios: Report Info -> Baseline, Downside, Upside forecasts. Goal -> Inform about future possibilities. Viz -> Text blocks. Interaction -> Buttons to toggle visibility of each scenario. Justification -> Allows users to compare potential outcomes without cluttering the page.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 40vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 400px; }
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-stone-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-xl md:text-2xl font-bold text-stone-900">Swiss Real Estate Outlook</h1>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#summary" class="nav-link text-stone-600 hover:text-cyan-700 border-b-2 border-transparent hover:border-cyan-600">Summary</a>
+                    <a href="#drivers" class="nav-link text-stone-600 hover:text-cyan-700 border-b-2 border-transparent hover:border-cyan-600">Market Drivers</a>
+                    <a href="#local" class="nav-link text-stone-600 hover:text-cyan-700 border-b-2 border-transparent hover:border-cyan-600">Local Analysis</a>
+                    <a href="#outlook" class="nav-link text-stone-600 hover:text-cyan-700 border-b-2 border-transparent hover:border-cyan-600">Outlook & Strategy</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <!-- Section 1: At a Glance Summary -->
+        <section id="summary" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-stone-900 mb-2 text-center">The Big Picture: 2025-2035 Outlook</h2>
+            <p class="text-lg text-stone-600 max-w-3xl mx-auto text-center mb-12">
+                The Swiss real estate market is set for a period of sustained, moderate growth. This stability is underpinned by the Swiss National Bank's low interest rate policy and a chronic, structural housing shortage. Explore the key metrics defining the next decade for property investors.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center">
+                    <h3 class="text-stone-500 font-semibold mb-2">SNB Policy Rate (Mid-2025)</h3>
+                    <p class="text-4xl font-bold text-cyan-700">0.00%</p>
+                    <p class="text-sm text-stone-500 mt-2">Signaling a "lower-for-longer" environment.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center">
+                    <h3 class="text-stone-500 font-semibold mb-2">10-Year Fixed Mortgage</h3>
+                    <p class="text-4xl font-bold text-cyan-700">1.5% - 2.5%</p>
+                    <p class="text-sm text-stone-500 mt-2">Forecast range providing financing stability.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center">
+                    <h3 class="text-stone-500 font-semibold mb-2">Zurich Vacancy Rate</h3>
+                    <p class="text-4xl font-bold text-amber-600">0.07%</p>
+                    <p class="text-sm text-stone-500 mt-2">Illustrating extreme housing scarcity.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 text-center">
+                    <h3 class="text-stone-500 font-semibold mb-2">Long-Term Price Growth</h3>
+                    <p class="text-4xl font-bold text-cyan-700">1.5% - 3.0%</p>
+                    <p class="text-sm text-stone-500 mt-2">Sustainable annual appreciation forecast.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Market Drivers -->
+        <section id="drivers" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-stone-900 mb-2 text-center">Core Market Drivers</h2>
+            <p class="text-lg text-stone-600 max-w-3xl mx-auto text-center mb-12">
+                Three powerful forces shape the Swiss property market: accommodative monetary policy, a fundamental supply-demand imbalance, and a long-term demographic shift. Understanding these drivers is key to navigating the market effectively.
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="text-xl font-bold mb-4 text-center">SNB Policy Rate: The Accommodative Stance</h3>
+                     <div class="chart-container">
+                        <canvas id="snbRateChart"></canvas>
+                    </div>
+                    <p class="text-sm text-stone-600 mt-4">The SNB's decisive rate cuts to 0.00% have made mortgage financing historically cheap. Projections show the policy rate remaining at or near zero through 2027, creating a stable, favorable environment for borrowers and supporting property valuations.</p>
+                </div>
+                <div class="space-y-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="text-xl font-bold mb-4">The Demographic Tug-of-War</h3>
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex-1 border-r-0 md:border-r md:border-stone-200 pr-4">
+                                <h4 class="font-semibold text-emerald-700">Demand Driver: Immigration</h4>
+                                <p class="text-5xl text-center my-2">➔</p>
+                                <p class="text-sm text-stone-600">High net immigration of skilled workers (79,000 in 2024) fuels persistent, strong demand for housing, especially in economic hubs like Zurich.</p>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-orange-700">Supply Influence: "Silver Tsunami"</h4>
+                                <p class="text-5xl text-center my-2">➔</p>
+                                <p class="text-sm text-stone-600">Post-2030, the baby boomer generation will release over 400,000 properties, but this will be a "great rotation" towards smaller, urban units, not a market crash.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="text-xl font-bold mb-2">Structural Scarcity: The Bedrock of Value</h3>
+                        <p class="text-sm text-stone-600">Demand for housing in Switzerland consistently outstrips new supply. Restrictive zoning, land scarcity, and lengthy approval processes mean construction cannot keep pace with population growth, creating a powerful floor under property prices.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Hyper-Local Analysis -->
+        <section id="local" class="mb-16 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-stone-900 mb-2 text-center">Hyper-Local Deep Dive</h2>
+             <p class="text-lg text-stone-600 max-w-3xl mx-auto text-center mb-8">
+                The real estate story is always local. Select a municipality to compare key metrics and understand the unique characteristics of the prime Lake Zurich markets.
+            </p>
+            <div class="text-center mb-8">
+                <select id="locationSelector" class="p-3 rounded-lg border border-stone-300 bg-white shadow-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500">
+                    <option value="kilchberg" selected>Kilchberg</option>
+                    <option value="thalwil">Thalwil</option>
+                    <option value="zurich">Zurich (City)</option>
+                </select>
+            </div>
+            
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-stone-200">
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    <div class="lg:col-span-3">
+                        <h3 id="localChartTitle" class="text-xl font-bold mb-4 text-center">Avg. Price / sqm (CHF) - Kilchberg</h3>
+                        <div class="chart-container">
+                            <canvas id="localPriceChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2 flex flex-col justify-center space-y-4">
+                         <div>
+                            <h4 id="localTitle" class="text-xl font-bold mb-2">Market Profile: Kilchberg</h4>
+                            <p id="localDescription" class="text-stone-600 text-sm">Widely regarded as the most exclusive municipality in Switzerland. Represents the apex of the "Gold Coast" luxury market, defined by unmatched prestige, scarcity, and demand from the highest echelons of wealth.</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-stone-100 p-4 rounded-lg text-center">
+                                <h4 class="text-sm font-semibold text-stone-600">12-Mo. Trend (Apt)</h4>
+                                <p id="localTrend" class="text-2xl font-bold text-cyan-700">+14.0%</p>
+                            </div>
+                            <div class="bg-stone-100 p-4 rounded-lg text-center">
+                                <h4 class="text-sm font-semibold text-stone-600">Gross Yield</h4>
+                                <p id="localYield" class="text-2xl font-bold text-cyan-700">&lt; 2.0%</p>
+                            </div>
+                        </div>
+                         <div class="bg-stone-100 p-4 rounded-lg text-center">
+                            <h4 class="text-sm font-semibold text-stone-600">Median Price / sqm (Apt)</h4>
+                            <p id="localMedian" class="text-2xl font-bold text-cyan-700">CHF 27,631</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Outlook & Strategy -->
+        <section id="outlook" class="scroll-mt-20">
+             <h2 class="text-3xl font-bold text-stone-900 mb-2 text-center">Outlook & Strategic Recommendations</h2>
+             <p class="text-lg text-stone-600 max-w-3xl mx-auto text-center mb-12">
+                A successful investment requires a clear thesis, an understanding of potential risks, and an actionable strategy. This section synthesizes the analysis into long-term scenarios and concrete recommendations.
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="text-xl font-bold mb-4">Long-Term Scenarios (2028-2035)</h3>
+                    <div class="mb-4 flex space-x-2">
+                        <button id="btn-baseline" class="scenario-btn flex-1 p-2 rounded-md bg-cyan-600 text-white shadow">Baseline</button>
+                        <button id="btn-downside" class="scenario-btn flex-1 p-2 rounded-md bg-white text-stone-700 border border-stone-300">Downside</button>
+                        <button id="btn-upside" class="scenario-btn flex-1 p-2 rounded-md bg-white text-stone-700 border border-stone-300">Upside</button>
+                    </div>
+                    <div id="scenario-content">
+                        <div id="content-baseline">
+                            <h4 class="font-semibold text-cyan-700">Baseline Scenario: Sustainable Growth</h4>
+                            <p class="text-sm text-stone-600">The most likely path. Continued modest economic growth, low interest rates, and high immigration lead to stable price appreciation of **1.5% to 3.0%** annually. The market moderates from its recent frenzy but remains fundamentally strong, supported by the housing deficit.</p>
+                        </div>
+                        <div id="content-downside" class="hidden">
+                            <h4 class="font-semibold text-orange-700">Downside Scenario: Stagnation</h4>
+                            <p class="text-sm text-stone-600">Triggered by external shocks (e.g., global recession, trade conflicts). While a crash is unlikely due to the supply floor, the market could see a prolonged period of flat prices (**0% to 1%** annual growth), with older, less efficient properties facing slight declines.</p>
+                        </div>
+                        <div id="content-upside" class="hidden">
+                            <h4 class="font-semibold text-emerald-700">Upside Scenario: Renewed Boom</h4>
+                            <p class="text-sm text-stone-600">A global flight to "safe haven" assets could force the SNB into an even more aggressive low/negative rate policy. This, combined with an influx of capital, could reignite stronger price growth in the **3% to 5%** range, especially for trophy assets.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="text-xl font-bold mb-4">Actionable Recommendations</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-cyan-600 font-bold text-xl mr-3">✓</span>
+                            <div>
+                                <h4 class="font-semibold">Prioritize Quality Over "Value"</h4>
+                                <p class="text-sm text-stone-600">Focus on "trophy" assets in the best locations with unique attributes (views, modern condition, high energy efficiency) that will prove most resilient to long-term demographic shifts.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                             <span class="text-cyan-600 font-bold text-xl mr-3">✓</span>
+                            <div>
+                                <h4 class="font-semibold">Secure Long-Term Financing</h4>
+                                <p class="text-sm text-stone-600">With a narrow spread between floating and fixed rates, locking in a **10 or 15-year fixed-rate mortgage** is a powerful strategic move to hedge against future interest rate volatility.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                             <span class="text-cyan-600 font-bold text-xl mr-3">✓</span>
+                            <div>
+                                <h4 class="font-semibold">Adopt a Long-Term Hold Strategy</h4>
+                                <p class="text-sm text-stone-600">This market is suited for a **10+ year holding period**. High transaction costs and structural stability reward patient capital, not short-term speculation.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-100 border-t border-stone-200 mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-stone-500">
+            <p class="text-sm">This interactive application is a synthesis of the "Swiss Real Estate Outlook 2025-2035" report. Data as of mid-2025. For informational purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const localData = {
+                kilchberg: {
+                    title: "Kilchberg",
+                    description: "Widely regarded as the most exclusive municipality in Switzerland. Represents the apex of the \"Gold Coast\" luxury market, defined by unmatched prestige, scarcity, and demand from the highest echelons of wealth.",
+                    prices: { apartment: 25593, house: 20621 },
+                    trend: "+14.0%",
+                    yield: "< 2.0%",
+                    median: "CHF 27,631"
+                },
+                thalwil: {
+                    title: "Thalwil",
+                    description: "A highly sought-after premium community prized for its lakeside setting and excellent transport links to Zurich and Zug. A prime location where exclusive properties can command prices of up to CHF 10 million.",
+                    prices: { apartment: 20290, house: 19851 },
+                    trend: "+4.3%",
+                    yield: "< 2.0%",
+                    median: "CHF 20,192"
+                },
+                zurich: {
+                    title: "Zurich (City)",
+                    description: "One of Europe's most stable and sought-after residential markets, serving as a global financial hub with extreme property scarcity (0.07% vacancy rate). The market is tiered by district, from prime to suburban.",
+                    prices: { apartment: 14235, house: 10795 },
+                    trend: "+4.2%",
+                    yield: "2.0% - 3.8%",
+                    median: "N/A"
+                }
+            };
+
+            const chartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.dataset.label}: ${context.parsed.y.toLocaleString('de-CH')} CHF`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return (value / 1000) + 'k';
+                            }
+                        }
+                    }
+                }
+            };
+            
+            const snbRateData = {
+                labels: ['2022', 'Jun 2023', '2024', 'Jun 2025', '2026', '2027'],
+                datasets: [{
+                    label: 'SNB Policy Rate (%)',
+                    data: [-0.75, 1.75, 1.00, 0.00, 0.00, 0.00],
+                    borderColor: 'rgb(8, 145, 178)',
+                    backgroundColor: 'rgba(8, 145, 178, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            };
+
+            const snbCtx = document.getElementById('snbRateChart').getContext('2d');
+            new Chart(snbCtx, { type: 'line', data: snbRateData, options: chartOptions });
+
+            let localPriceChart;
+            const localPriceCtx = document.getElementById('localPriceChart').getContext('2d');
+
+            function updateLocalChart(location) {
+                const data = localData[location];
+                
+                document.getElementById('localChartTitle').innerText = `Avg. Price / sqm (CHF) - ${data.title}`;
+                document.getElementById('localTitle').innerText = `Market Profile: ${data.title}`;
+                document.getElementById('localDescription').innerText = data.description;
+                document.getElementById('localTrend').innerText = data.trend;
+                document.getElementById('localYield').innerText = data.yield;
+                document.getElementById('localMedian').innerText = data.median;
+
+                const chartData = {
+                    labels: ['Apartment', 'House'],
+                    datasets: [{
+                        label: 'Avg. Price / sqm',
+                        data: [data.prices.apartment, data.prices.house],
+                        backgroundColor: ['rgba(8, 145, 178, 0.7)', 'rgba(245, 158, 11, 0.7)'],
+                        borderColor: ['rgb(8, 145, 178)', 'rgb(245, 158, 11)'],
+                        borderWidth: 1
+                    }]
+                };
+
+                if (localPriceChart) {
+                    localPriceChart.destroy();
+                }
+
+                localPriceChart = new Chart(localPriceCtx, {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                        ...chartOptions,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: chartOptions.plugins.tooltip
+                        }
+                    }
+                });
+            }
+
+            document.getElementById('locationSelector').addEventListener('change', function(e) {
+                updateLocalChart(e.target.value);
+            });
+
+            updateLocalChart('kilchberg');
+            
+            const scenarioButtons = {
+                baseline: document.getElementById('btn-baseline'),
+                downside: document.getElementById('btn-downside'),
+                upside: document.getElementById('btn-upside')
+            };
+            const scenarioContents = {
+                baseline: document.getElementById('content-baseline'),
+                downside: document.getElementById('content-downside'),
+                upside: document.getElementById('content-upside')
+            };
+
+            function handleScenarioClick(scenario) {
+                Object.values(scenarioButtons).forEach(btn => {
+                    btn.classList.remove('bg-cyan-600', 'text-white', 'shadow');
+                    btn.classList.add('bg-white', 'text-stone-700', 'border', 'border-stone-300');
+                });
+                Object.values(scenarioContents).forEach(content => content.classList.add('hidden'));
+
+                scenarioButtons[scenario].classList.add('bg-cyan-600', 'text-white', 'shadow');
+                scenarioButtons[scenario].classList.remove('bg-white', 'text-stone-700', 'border', 'border-stone-300');
+                scenarioContents[scenario].classList.remove('hidden');
+            }
+
+            scenarioButtons.baseline.addEventListener('click', () => handleScenarioClick('baseline'));
+            scenarioButtons.downside.addEventListener('click', () => handleScenarioClick('downside'));
+            scenarioButtons.upside.addEventListener('click', () => handleScenarioClick('upside'));
+
+        });
+    </script>
+</body>
+</html>
